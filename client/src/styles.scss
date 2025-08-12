@@ -1,0 +1,62 @@
+/* You can add global styles to this file, and also import other style files */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  font-family: "Inter", system-ui, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #888 transparent;
+}
+
+body {
+  height: 100vh;
+  background-color: #1d2125;
+}
+
+main {
+  height: calc(95% - 50px);
+  background-color: inherit;
+}
+
+.text-xs {
+  font-size: 0.8rem;
+}
+
+.text-sm {
+  font-size: 12px;
+}
+
+.text-8 {
+  font-size: 8px;
+}
+
+.avatar-sm {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  border-width: 1px;
+  border-style: solid;
+}

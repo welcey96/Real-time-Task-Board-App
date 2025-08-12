@@ -1,0 +1,18 @@
+<header>
+    <nav class="navbar navbar-dark bg-dark px-3 shadow-sm">
+        <div class="container-fluid d-flex justify-content-between align-items-center">
+            <a class="navbar-brand d-flex align-items-center gap-2" [routerLink]="['/']">
+                <svg class="neon-svg" xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor"
+                    viewBox="0 0 24 24">
+                    <path
+                        d="M7 18c-1.104 0-2 .896-2 2s.896 2 2 2c1.103 0 2-.896 2-2s-.897-2-2-2zm0 2a.999.999 0 1 1 0-2 .999.999 0 0 1 0 2zm10-2c-1.104 0-2 .896-2 2s.896 2 2 2c1.103 0 2-.896 2-2s-.897-2-2-2zm0 2a.999.999 0 1 1 0-2 .999.999 0 0 1 0 2zM6.342 4l1.272 5h10.586l1.371-3.785a1 1 0 0 0-.936-1.382H6.342zM5.41 2h14.261a2 2 0 0 1 1.873 2.76l-2.351 6.488A1.996 1.996 0 0 1 17.35 12H8.271l.693 3h10.039a1 1 0 1 1 0 2H8a2 2 0 0 1-1.947-1.553L3.52 3H2a1 1 0 1 1 0-2h2.875a1 1 0 0 1 .96.712L5.41 2z" />
+                </svg>
+                <span class="fs-6">Shopping List</span>
+            </a>
+            <div class="avatar rounded-circle bg-dark d-flex justify-content-center align-items-center"
+                [ngStyle]="{'border-color': getUser()?.color}">
+                <span class="text-white fw-bold">{{ getUser()?.initials | uppercase }}</span>
+            </div>
+        </div>
+    </nav>
+</header>

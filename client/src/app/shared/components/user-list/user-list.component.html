@@ -1,0 +1,16 @@
+<aside *ngIf="users.length" class="userList" [class.collapsed]="isCollapsed">
+    <div class="d-flex align-items-center justify-content-between">
+        <h5 class="text-xs px-2 mb-0 ">Users — {{users.length}}</h5>
+        <button class="btn btn-toggle text-white" (click)="isCollapsed = !isCollapsed">
+            ☰
+        </button>
+    </div>
+    <ng-container *ngFor="let u of users; trackBy:trackById">
+        <div class="p-2 d-flex user align-items-center" [@slideIn]>
+            <div class="user-avatar border-1" [ngStyle]="{'border-color': u.color}">
+                <span class="text-white fw-bold">{{ u.initials | uppercase }}</span>
+            </div>
+            <span [style.color]="u.color" class="fw-bold username"> {{ u.username }}</span>
+        </div>
+    </ng-container>
+</aside>

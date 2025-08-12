@@ -1,0 +1,14 @@
+<aside class="logList" *ngIf="logs.length">
+    <h5 class="text-xs px-2 text-white">Logs</h5>
+    <ng-container *ngFor="let log of logs; trackBy:trackByIndex">
+        <div class="p-2 pb-0 d-flex justify-content-start align-items-center text-xs" [@slideIn]>
+            <div class="fw-lighter text-white me-2">
+                [{{log.timestamp | date:'shortTime'}}]
+            </div>
+            <div>
+                <span [style.color]="log.userColor" class="fw-bolder" *ngIf="log.username"> {{log.username}} &nbsp;</span>
+                <span class="text-white">{{log.message}}</span>
+            </div>
+        </div>
+    </ng-container>
+</aside>

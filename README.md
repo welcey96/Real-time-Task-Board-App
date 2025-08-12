@@ -27,13 +27,13 @@ A simple shopping list app powered by WebSockets, add items, drag-and-drop inter
 
 Clone the project
 ```bash
-  git clone https://github.com/nbcc-wmad/websockets-team-project-team3
+  git clone https://github.com/welcey96/websockets-shoppingList
 ```
 
 Go to the project directory
 
 ```bash
-  cd websockets-team-project-team3
+  cd websockets
 ```
 
 Install dependencies on client and server
@@ -51,15 +51,15 @@ Install dependencies on client and server
 Start server
 
 ```bash
-  ...websockets-team-project-team3 > cd server
-  ...websockets-team-project-team3\server > npm run dev 
+  ...websockets > cd server
+  ...websockets\server > npm run dev 
 ```
 
 Start client
 
 ```bash
-  ...websockets-team-project-team3 > cd client
-  ...websockets-team-project-team3\client > npm run start 
+  ...websockets > cd client
+  ...websockets\client > npm run start 
 ```
 
 On the same client terminal after running npm run start, scroll through the bottom of the terminal and select the url where the app is served.

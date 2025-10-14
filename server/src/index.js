@@ -1,11 +1,12 @@
+const db = require("../db/mongo.js");
 const express = require("express");
+
 const http = require("http");
 const { Server } = require("socket.io");
 const { Observer, Emitter } = require("./Enum.js");
 const { getRandomColor, getInitials } = require("./utils.js");
 
-const PORT = process.env.PORT || 3000;
-
+const PORT = process.env.PORT || 5000;
 const app = express();
 const server = http.createServer(app);
 

@@ -8,6 +8,7 @@ export enum SocketEvent {
 }
 
 export enum SocketEmitEvent {
+  HasItemTypeChange = 'hasItemTypeChange',
   HasShoppingListUpdate = 'hasShoppingListUpdate',
   HasBuyingListUpdate = 'hasBuyingListUpdate',
   HasDoneListUpdate = 'hasDoneListUpdate',
@@ -16,7 +17,7 @@ export enum SocketEmitEvent {
   UserJoined = 'userJoined',
   EditItem = 'editItem',
   ItemAssignedToUser = 'itemAssignedToUser',
-  DeleteItem = 'deleteItem'
+  DeleteItem = 'deleteItem',
 }
 
 export enum ListType {
@@ -24,3 +25,9 @@ export enum ListType {
   BuyingList = 'buyingList',
   DoneList = 'doneList',
 }
+
+export const ListTypeIndex = {
+  [ListType.ShoppingList]: 1,
+  [ListType.BuyingList]: 2,
+  [ListType.DoneList]: 3,
+};

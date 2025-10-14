@@ -7,10 +7,11 @@ class Observer {
   static #_HAS_SHOPPING_LIST_UPDATE = "hasShoppingListUpdate";
   static #_HAS_BUYING_LIST_UPDATE = "hasBuyingListUpdate";
   static #_HAS_DONE_LIST_UPDATE = "hasDoneListUpdate";
-  static #_EDIT_ITEM = 'editItem';
-  static #_ITEM_ASSIGNED_TO_USER = 'itemAssignedToUser'
-  static #_DELETE_ITEM = 'deleteItem'
-
+  static #_EDIT_ITEM = "editItem";
+  static #_ITEM_ASSIGNED_TO_USER = "itemAssignedToUser";
+  static #_DELETE_ITEM = "deleteItem";
+  static #_HAS_ITEM_TYPE_CHANGE = "hasItemTypeChange";
+  
   static get CONNECTION() {
     return this.#_CONNECTION;
   }
@@ -25,6 +26,9 @@ class Observer {
   }
   static get ADD_SHOPPING_ITEM() {
     return this.#_ADD_SHOPPING_ITEM;
+  }
+  static get HAS_ITEM_TYPE_CHANGE() {
+    return this.#_HAS_ITEM_TYPE_CHANGE;
   }
   static get HAS_SHOPPING_LIST_UPDATE() {
     return this.#_HAS_SHOPPING_LIST_UPDATE;

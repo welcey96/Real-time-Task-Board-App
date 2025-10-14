@@ -20,7 +20,12 @@ import {
   UserModel,
 } from '@models/models';
 import { fromEvent, Subject, takeUntil } from 'rxjs';
-import { ListType, SocketEmitEvent, SocketEvent } from '@enum/enum';
+import {
+  ListType,
+  ListTypeIndex,
+  SocketEmitEvent,
+  SocketEvent,
+} from '@enum/enum';
 import { TopbarComponent } from '@shared/components/top-bar/top-bar.component';
 import { UserListComponent } from '@shared/components/user-list/user-list.component';
 import { LogListComponent } from '@shared/components/log-list/log-list.component';
@@ -266,7 +271,7 @@ export class HomeComponent implements AfterViewChecked {
   onDragged(item: any, list: any[], effect: DropEffect) {
     if (effect === 'move') {
       list.splice(list.indexOf(item), 1);
-
+      
       this.socketService.emit(
         SocketEmitEvent.HasShoppingListUpdate,
         this.shoppingList
@@ -296,6 +301,11 @@ export class HomeComponent implements AfterViewChecked {
       list.splice(index, 0, data.item);
 
       if (data.origin !== type) {
+        this.socketService.emit(SocketEmitEvent.HasItemTypeChange, {
+          id: data.item.id,
+          type: ListTypeIndex[type],
+        });
+
         if (type == ListType.ShoppingList)
           this.socketService.emit(
             SocketEmitEvent.AddLog,

@@ -18,4 +18,8 @@ function getDB() {
   return db;
 }
 
-module.exports = { connectDB, getDB };
+function getCollection(name) {
+  return getDB().collection(name);
+}
+
+module.exports = { connectDB, getDB, getCollection };

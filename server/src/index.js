@@ -1,4 +1,4 @@
-const db = require("../db/mongo.js");
+require("./db/mongo.js");
 const express = require("express");
 
 const http = require("http");

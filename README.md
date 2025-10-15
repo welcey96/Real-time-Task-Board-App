@@ -65,3 +65,11 @@ Start client
 On the same client terminal after running npm run start, scroll through the bottom of the terminal and select the url where the app is served.
 One url is using localhost:port, and the other one is the ipAddress:port (click the second one to let others connect to your app) 
 
+
+### :memo: ToDos / WIP
+:hammer_and_wrench:Keep the order of the cards
+:hammer_and_wrench: Implement Authentication
+:hammer_and_wrench:Improve UI
+:hammer_and_wrench:Track all users (not just active users)
+:hammer_and_wrench:Persist logs
+

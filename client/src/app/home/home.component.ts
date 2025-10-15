@@ -6,7 +6,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import { SocketService } from '@services/socket.service';
-import { UserService } from '@services/user.service';
 import { ToastrService } from 'ngx-toastr';
 import { CommonModule, NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -29,7 +28,7 @@ import {
 import { TopbarComponent } from '@shared/components/top-bar/top-bar.component';
 import { UserListComponent } from '@shared/components/user-list/user-list.component';
 import { LogListComponent } from '@shared/components/log-list/log-list.component';
-import { users$ } from '@models/signals';
+import { activeAccount$, users$ } from '@models/signals';
 
 @Component({
   selector: 'app-home',
@@ -76,7 +75,6 @@ export class HomeComponent implements AfterViewChecked {
 
   constructor(
     private socketService: SocketService,
-    private userService: UserService,
     private toastr: ToastrService,
     private renderer: Renderer2
   ) {}
@@ -91,7 +89,7 @@ export class HomeComponent implements AfterViewChecked {
 
   ngOnInit() {
     this.socketService.emit(SocketEmitEvent.UserJoined, {
-      username: this.userService.getUsername(),
+      username: activeAccount$()?.username,
     });
 
     this.listen<AlertResponse>(SocketEvent.Alert, (res) => {

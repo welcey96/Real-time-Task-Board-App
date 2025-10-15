@@ -9,9 +9,14 @@
                 </svg>
                 <span class="fs-6">Shopping List</span>
             </a>
-            <div class="avatar rounded-circle bg-dark d-flex justify-content-center align-items-center"
-                [ngStyle]="{'border-color': getUser()?.color}">
-                <span class="text-white fw-bold">{{ getUser()?.initials | uppercase }}</span>
+            <div class="d-flex gap-2">
+                @if (isLoggedIn) {
+                <button class="btn btn-outline text-white border" (click)="logout()">Logout</button>
+                }
+                <div class="avatar rounded-circle bg-dark d-flex justify-content-center align-items-center"
+                    [ngStyle]="{'border-color': getUser()?.color}">
+                    <span class="text-white fw-bold">{{ getUser()?.initials | uppercase }}</span>
+                </div>
             </div>
         </div>
     </nav>

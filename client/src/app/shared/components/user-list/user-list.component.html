@@ -10,7 +10,7 @@
             <div class="user-avatar border-1" [ngStyle]="{'border-color': u.color}">
                 <span class="text-white fw-bold">{{ u.initials | uppercase }}</span>
             </div>
-            <span [style.color]="u.color" class="fw-bold username"> {{ u.username }}</span>
+            <span [style.color]="u.color" class="fw-bold username text-xs">{{ u.username.split('@')[0] }}</span>
         </div>
     </ng-container>
 </aside>

@@ -17,7 +17,17 @@ for (const name of Object.keys(interfaces)) {
 const envPath = path.join(__dirname, "src/environments/environment.ts");
 const content = `export const environment = {
   production: false,
-  socketUrl: 'ws://${localIp}:3000'
+  socketUrl: 'ws://${localIp}:3000',
+  msalConfig: {
+    auth: {
+      clientId: 'fde396f7-6f15-4b7a-9e12-cdbd5439ac1b',
+      authority: 'https://login.microsoftonline.com/common',
+    },
+  },
+  apiConfig: {
+    scopes: ['user.read'],
+    uri: 'https://graph.microsoft.com/v1.0/me',
+  },
 };\n`;
 
 fs.writeFileSync(envPath, content);

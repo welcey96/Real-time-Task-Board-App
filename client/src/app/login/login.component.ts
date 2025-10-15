@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { UserService } from '@services/user.service';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '@services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -13,12 +12,13 @@ import { FormsModule } from '@angular/forms';
 export class LoginComponent {
   username?: string;
 
-  constructor(private userService: UserService, private router: Router) {}
+  constructor(private authService: AuthService) {}
 
   login() {
-    if (this.username?.trim()) {
-      this.userService.setUsername(this.username);
-      this.router.navigate(['/home']);
-    }
+    this.authService.loginRedirect();
+  }
+
+  logout() {
+    this.authService.logoutRedirect();
   }
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { Observable } from 'rxjs';
-import { logs$, users$ } from '@models/signals';
+import { activeUserInfo$, logs$, users$ } from '@models/signals';
 import { SocketEmitEvent, SocketEvent } from '@enum/enum';
 import { environment } from 'environments/environment';
 
@@ -43,6 +43,9 @@ export class SocketService {
           break;
         case SocketEvent.UpdateUserList:
           users$.set(data);
+          break;
+        case SocketEvent.UserJoinSuccess:
+          activeUserInfo$.set(data);
           break;
       }
     });

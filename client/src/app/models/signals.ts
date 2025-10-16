@@ -5,3 +5,4 @@ import { LogModel, UserModel } from '@models/models';
 export const logs$ = signal<LogModel[]>([]);
 export const users$ = signal<UserModel[]>([]);
 export const activeAccount$ = signal<AccountInfo | null>(null);
+export const activeUserInfo$ = signal<UserModel | null>(null);

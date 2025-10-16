@@ -28,7 +28,7 @@ import {
 import { TopbarComponent } from '@shared/components/top-bar/top-bar.component';
 import { UserListComponent } from '@shared/components/user-list/user-list.component';
 import { LogListComponent } from '@shared/components/log-list/log-list.component';
-import { activeAccount$, users$ } from '@models/signals';
+import { activeAccount$, activeUserInfo$, users$ } from '@models/signals';
 
 @Component({
   selector: 'app-home',
@@ -84,7 +84,7 @@ export class HomeComponent implements AfterViewChecked {
   }
 
   getLogInId() {
-    return this.socketService.getSocketId();
+    return activeUserInfo$()?.id;
   }
 
   ngOnInit() {
@@ -269,7 +269,7 @@ export class HomeComponent implements AfterViewChecked {
   onDragged(item: any, list: any[], effect: DropEffect) {
     if (effect === 'move') {
       list.splice(list.indexOf(item), 1);
-      
+
       this.socketService.emit(
         SocketEmitEvent.HasShoppingListUpdate,
         this.shoppingList

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { activeAccount$, users$ } from '@models/signals';
+import { activeUserInfo$ } from '@models/signals';
 import { AuthService } from '@services/auth.service';
 import { SocketService } from '@services/socket.service';
 
@@ -24,7 +24,7 @@ export class TopbarComponent implements OnInit {
   }
 
   getUser() {
-    return users$().find((u) => u.id == this.socketService.getSocketId());
+    return activeUserInfo$();
   }
 
   logout(popup?: boolean) {

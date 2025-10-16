@@ -5,6 +5,7 @@ export enum SocketEvent {
   UpdateBuyingList = 'updateBuyingList',
   UpdateDoneList = 'updateDoneList',
   Alert = 'alert',
+  UserJoinSuccess = 'userJoinSuccess',
 }
 
 export enum SocketEmitEvent {

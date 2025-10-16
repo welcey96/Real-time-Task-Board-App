@@ -24,8 +24,6 @@ Users can add, assign, edit, delete, and move items using drag-and-drop. Changes
 - Socket.IO
 - MongoDB
 
----
-
 ## Features
 
 - **Authentication**

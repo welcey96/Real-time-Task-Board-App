@@ -185,7 +185,7 @@ export class HomeComponent implements AfterViewChecked {
 
   onEdit(type: ListType, item: IShoppingItem) {
     if (item.assignedUser && this.getLogInId() != item.assignedUser.id) {
-      this.toastr.error(`User not allowed to update item`, 'Update Denied');
+      this.toastr.error(`User not allowed to update task`, 'Update Denied');
       return;
     }
 
@@ -195,7 +195,7 @@ export class HomeComponent implements AfterViewChecked {
 
       if (!item) {
         this.toastr.error(
-          `The item '${this.toEditItem.name}' was already deleted`,
+          `The task '${this.toEditItem.name}' was already deleted`,
           'Error'
         );
       } else {
@@ -231,7 +231,7 @@ export class HomeComponent implements AfterViewChecked {
       if (!this.users.find((x) => x.id == user.id)) {
         this.toastr.error(
           `User with username '${user}' has disconnected`,
-          'Item Assignment Error'
+          'Task Assignment Error'
         );
         this.assignMode = false;
         this.selectedTaskId = '';
@@ -253,7 +253,7 @@ export class HomeComponent implements AfterViewChecked {
     if (item && item.id.length) {
       if (!this.mergedList.find((i) => i.id == item.id)) {
         this.toastr.error(
-          `The item '${this.toEditItem.name}' was already deleted`,
+          `The task '${this.toEditItem.name}' was already deleted`,
           'Error'
         );
         return;
@@ -307,17 +307,17 @@ export class HomeComponent implements AfterViewChecked {
         if (type == ListType.ShoppingList)
           this.socketService.emit(
             SocketEmitEvent.AddLog,
-            `📜 moved item '${data.item.name}' back to shopping list`
+            `📜 moved task '${data.item.name}' to toDo`
           );
         else if (type == ListType.BuyingList)
           this.socketService.emit(
             SocketEmitEvent.AddLog,
-            `❗moved item '${data.item.name}' to buying`
+            `❗moved task '${data.item.name}' to in progress`
           );
         else if (type == ListType.DoneList)
           this.socketService.emit(
             SocketEmitEvent.AddLog,
-            ` ✅ moved item '${data.item.name}' to done`
+            ` ✅ marked task '${data.item.name}' as done`
           );
       }
     }

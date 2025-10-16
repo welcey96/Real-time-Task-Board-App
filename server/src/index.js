@@ -149,7 +149,7 @@ async function onAddShoppingItem(id, data) {
   if (!!(await itemsCollection.insertOne(item))) {
     shoppingList.push(item);
     notify(Emitter.UPDATE_SHOPPING_LIST, shoppingList);
-    onAddLog(id, `👀 added item '${data.name}' to the list`);
+    onAddLog(id, `👀 added task '${data.name}' to the board`);
   }
 }
 
@@ -212,7 +212,7 @@ async function onHasItemEdited(userId, data) {
         item.name = name;
 
         notifyListByType(type);
-        onAddLog(userId, `updated item '${prev}' to '${name}'`);
+        onAddLog(userId, `updated task name '${prev}' to '${name}'`);
       }
     }
   }
@@ -237,10 +237,10 @@ async function onAssignItemToUser(userId, data) {
 
         let msg = "";
         if (assignedUser)
-          msg = `assigned item '${item.name}' to user ${
+          msg = `assigned task '${item.name}' to user ${
             getUserById(assignedUser?.id)?.username
           }`;
-        else msg = `set item '${item.name}' as unassigned`;
+        else msg = `set task '${item.name}' as unassigned`;
 
         notifyListByType(type);
         onAddLog(userId, msg);
@@ -264,7 +264,7 @@ async function onDeleteItem(socketId, data) {
       else doneList = doneList.filter((i) => i.id != id);
 
       notifyListByType(data.type);
-      onAddLog(socketId, `deleted item '${doc.name}' from the list`);
+      onAddLog(socketId, `deleted task '${doc.name}' from the board`);
     }
   }
 }

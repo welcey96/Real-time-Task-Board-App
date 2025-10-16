@@ -5,7 +5,7 @@
         <div class="d-flex column-gap-2 flex-wrap">
             <section class="row column-gap-2 main">
                 <div class="col zone p-2 shadow-sm">
-                    <h5 class="fs-6 fw-lighter mx-2 my-3">SHOPPING ITEMS</h5>
+                    <h5 class="fs-6 fw-lighter mx-2 my-3">TODO</h5>
                     <ng-container *ngTemplateOutlet="listBoardTemplate; 
                         context: {list: shoppingList, type:ListType.ShoppingList}">
                     </ng-container>
@@ -13,7 +13,7 @@
                 </div>
 
                 <div class="col zone p-2 shadow-sm">
-                    <h5 class="fs-6 fw-lighter mx-2 my-3">BUYING</h5>
+                    <h5 class="fs-6 fw-lighter mx-2 my-3">IN PROGRESS</h5>
                     <ng-container *ngTemplateOutlet="listBoardTemplate; 
                         context: {list: buyingList, type:ListType.BuyingList}">
                     </ng-container>

@@ -30,32 +30,32 @@ io.on(Observer.CONNECTION, (socket) => {
     await onInit();
   });
 
-  socket.on(Observer.ADD_LOG, (msg) => onAddLog(socket.id, msg));
+  socket.on(Observer.ADD_LOG, (msg) => onAddLog(socket.data.id, msg));
 
   socket.on(Observer.ADD_SHOPPING_ITEM, (data) =>
-    onAddShoppingItem(socket.id, data)
+    onAddShoppingItem(socket.data.id, data)
   );
-  socket.on(Observer.HAS_ITEM_TYPE_CHANGE, (data) =>
-    onHasItemTypeChange(data)
-  );
+  socket.on(Observer.HAS_ITEM_TYPE_CHANGE, (data) => onHasItemTypeChange(data));
   socket.on(Observer.HAS_SHOPPING_LIST_UPDATE, (data) =>
-    onHasShoppingListUpdate(socket.id, data)
+    onHasShoppingListUpdate(socket.data.id, data)
   );
   socket.on(Observer.HAS_BUYING_LIST_UPDATE, (data) =>
-    onHasBuyingListUpdate(socket.id, data)
+    onHasBuyingListUpdate(socket.data.id, data)
   );
   socket.on(Observer.HAS_DONE_LIST_UPDATE, (data) =>
-    onHasDoneListUpdate(socket.id, data)
+    onHasDoneListUpdate(socket.data.id, data)
   );
-  socket.on(Observer.EDIT_ITEM, (data) => onHasItemEdited(socket.id, data));
+  socket.on(Observer.EDIT_ITEM, (data) =>
+    onHasItemEdited(socket.data.id, data)
+  );
 
   socket.on(Observer.ITEM_ASSIGNED_TO_USER, (data) =>
-    onAssignItemToUser(socket.id, data)
+    onAssignItemToUser(socket.data.id, data)
   );
 
-  socket.on(Observer.DELETE_ITEM, (data) => onDeleteItem(socket.id, data));
+  socket.on(Observer.DELETE_ITEM, (data) => onDeleteItem(socket.data.id, data));
 
-  socket.on(Observer.DISCONNECT, () => onDisconnect(socket.id));
+  socket.on(Observer.DISCONNECT, () => onDisconnect(socket.data.id));
 });
 
 async function onInit() {
@@ -92,27 +92,49 @@ async function onInit() {
 }
 
 async function onUserJoined(socket, data) {
-  let user = {
-    id: socket.id,
-    ...data,
-    initials: getInitials(data.username),
-    color: getRandomColor(),
-    date: new Date(),
-  };
-
-  activeUsers.push(user);
-
   const usersCollection = getCollection("users");
 
-  if (await usersCollection.insertOne(user)) {
-    emit(socket, Emitter.ALERT, {
-      data: `👐 Welcome ${data.username}!`,
-      status: 1,
-    });
+  let user;
 
-    notify(Emitter.UPDATE_USER_LIST, activeUsers);
-    onAddLog(socket.id, `🙋 joined the session`);
+  const account = await usersCollection.findOne({
+    username: data.username,
+  });
+
+  if (!account) {
+    user = {
+      id: crypto.randomUUID(),
+      ...data,
+      initials: getInitials(data.username),
+      color: getRandomColor(),
+      date: new Date(),
+    };
+
+    if (await usersCollection.insertOne(user)) {
+      emit(socket, Emitter.ALERT, {
+        data: `👐 Welcome ${data.username}!`,
+        status: 1,
+      });
+
+      onAddLog(user.id, `🙋 joined the session`);
+    }
+  } else {
+    user = account;
   }
+
+  const activeUser = {
+    ...user,
+    socketId: socket.id,
+  };
+
+  socket.data.id = user.id;
+
+  if (!activeUsers.find((u) => u.id === user.id)) {
+    activeUsers.push(activeUser);
+  }
+
+  const { _id, ...rest } = user;
+  emit(socket, Emitter.USER_JOIN_SUCCESS, rest);
+  notify(Emitter.UPDATE_USER_LIST, activeUsers);
 }
 
 async function onAddShoppingItem(id, data) {

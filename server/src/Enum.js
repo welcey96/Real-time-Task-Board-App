@@ -11,7 +11,7 @@ class Observer {
   static #_ITEM_ASSIGNED_TO_USER = "itemAssignedToUser";
   static #_DELETE_ITEM = "deleteItem";
   static #_HAS_ITEM_TYPE_CHANGE = "hasItemTypeChange";
-  
+
   static get CONNECTION() {
     return this.#_CONNECTION;
   }
@@ -57,6 +57,7 @@ class Emitter {
   static #_UPDATE_BUYING_LIST = "updateBuyingList";
   static #_UPDATE_DONE_LIST = "updateDoneList";
   static #_UPDATE_LOGS = "updatelogs";
+  static #_USER_JOIN_SUCCESS = "userJoinSuccess";
 
   static get ALERT() {
     return this.#_ALERT;
@@ -76,9 +77,13 @@ class Emitter {
   static get UPDATE_LOGS() {
     return this.#_UPDATE_LOGS;
   }
+
+  static get USER_JOIN_SUCCESS() {
+    return this.#_USER_JOIN_SUCCESS;
+  }
 }
 
 module.exports = {
   Observer,
-  Emitter
+  Emitter,
 };

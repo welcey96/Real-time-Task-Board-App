@@ -83,7 +83,17 @@ class Emitter {
   }
 }
 
+const ItemType = {
+  shoppingList: 1,
+  buyingList: 2,
+  doneList: 3,
+  1: "shoppingList",
+  2: "buyingList",
+  3: "doneList",
+};
+
 module.exports = {
   Observer,
   Emitter,
+  ItemType,
 };

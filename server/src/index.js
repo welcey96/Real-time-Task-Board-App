@@ -114,8 +114,6 @@ async function onUserJoined(socket, data) {
         data: `👐 Welcome ${data.username}!`,
         status: 1,
       });
-
-      onAddLog(user.id, `🙋 joined the session`);
     }
   } else {
     user = account;
@@ -133,6 +131,8 @@ async function onUserJoined(socket, data) {
   }
 
   const { _id, ...rest } = user;
+
+  onAddLog(user.id, `🙋 joined the session`);
   emit(socket, Emitter.USER_JOIN_SUCCESS, rest);
   notify(Emitter.UPDATE_USER_LIST, activeUsers);
 }
@@ -193,60 +193,78 @@ function onAddLog(id, msg) {
   });
 }
 
-function onHasItemEdited(socketId, data) {
-  const { type, id, name } = data;
-  const list = getListByType(type);
+async function onHasItemEdited(userId, data) {
+  const { id, name, type } = data;
 
-  if (list.length) {
-    const item = list.find((x) => x.id == id);
+  const itemsCollection = getCollection("items");
+  const res = await itemsCollection.updateOne(
+    { id: id },
+    { $set: { name: name } }
+  );
+  if (res.modifiedCount > 0) {
+    const list = getListByType(type);
 
-    if (item) {
-      const prev = item.name;
-      item.name = name;
-      notifyListByType(type);
-      onAddLog(socketId, `updated item '${prev}' to '${name}'`);
+    if (list.length) {
+      const item = list.find((x) => x.id == id);
+
+      if (item) {
+        const prev = item.name;
+        item.name = name;
+
+        notifyListByType(type);
+        onAddLog(userId, `updated item '${prev}' to '${name}'`);
+      }
     }
   }
 }
 
-async function onAssignItemToUser(socketId, data) {
+async function onAssignItemToUser(userId, data) {
   const { id, type, assignedUser } = data;
 
   const itemsCollection = getCollection("items");
-  await itemsCollection.updateOne(
+  const res = await itemsCollection.updateOne(
     { id: id },
     { $set: { assignedUser: assignedUser?.id } }
   );
 
-  const list = getListByType(type);
-  if (list.length) {
-    const item = list.find((x) => x.id == id);
-    if (item) {
-      item.assignedUser = assignedUser;
+  if (res.modifiedCount > 0) {
+    const list = getListByType(type);
+    if (list.length) {
+      const item = list.find((x) => x.id == id);
 
-      let msg = "";
-      if (assignedUser)
-        msg = `assigned item '${item.name}' to user ${
-          getUserById(assignedUser?.id)?.username
-        }`;
-      else msg = `set item '${item.name}' as unassigned`;
+      if (item) {
+        item.assignedUser = assignedUser;
 
-      notifyListByType(type);
-      onAddLog(socketId, msg);
+        let msg = "";
+        if (assignedUser)
+          msg = `assigned item '${item.name}' to user ${
+            getUserById(assignedUser?.id)?.username
+          }`;
+        else msg = `set item '${item.name}' as unassigned`;
+
+        notifyListByType(type);
+        onAddLog(userId, msg);
+      }
     }
   }
 }
 
-function onDeleteItem(socketId, data) {
-  const { id, type } = data;
-  const list = getListByType(type);
-  if (list.length) {
-    const index = list.findIndex((x) => x.id == id);
-    if (index > -1) {
-      const prev = list[index].name;
-      list.splice(index, 1);
-      notifyListByType(type);
-      onAddLog(socketId, `deleted item '${prev}' from the list`);
+async function onDeleteItem(socketId, data) {
+  const itemsCollection = getCollection("items");
+  const doc = await itemsCollection.findOne({ id: data.id });
+
+  if (doc) {
+    const result = await itemsCollection.deleteOne({ id: data.id });
+    const { id, type } = data;
+    if (result.deletedCount > 0) {
+      if (type === "shoppingList")
+        shoppingList = shoppingList.filter((i) => i.id != id);
+      else if (type === "buyingList")
+        buyingList = buyingList.filter((i) => i.id != id);
+      else doneList = doneList.filter((i) => i.id != id);
+
+      notifyListByType(data.type);
+      onAddLog(socketId, `deleted item '${doc.name}' from the list`);
     }
   }
 }
@@ -270,12 +288,12 @@ function getListByType(type) {
     : [];
 }
 
-function notifyListByType(type) {
+async function notifyListByType(type) {
   if (type === "shoppingList")
     notify(Emitter.UPDATE_SHOPPING_LIST, shoppingList);
   else if (type === "buyingList")
     notify(Emitter.UPDATE_BUYING_LIST, buyingList);
-  else if (type === "doneList") notify(Emitter.UPDATE_DONE_LIST, doneList);
+  else notify(Emitter.UPDATE_DONE_LIST, doneList);
 }
 
 function getUsernameById(id) {
@@ -297,9 +315,6 @@ function notify(event, data) {
 }
 
 //all clients except sender
-function broadcast(socket, event, data) {
-  socket.broadcast.emit(event, data);
-}
 
 server.listen(PORT, () => {
   console.warn(`Server running on http://localhost:${PORT}`);

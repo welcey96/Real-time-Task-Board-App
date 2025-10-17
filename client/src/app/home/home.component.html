@@ -98,7 +98,7 @@
                                 </div>
                                 <span class="ms-2 text-sm" [class]="{'text-secondary':!item.assignedUser}"
                                     [style.color]="item.assignedUser?.color">
-                                    {{item.assignedUser?.username ?? 'Unassigned' }}
+                                    {{item.assignedUser?.username.split('@')[0] ?? 'Unassigned' }}
                                 </span>
                             </a>
                             <ul #usersDropdown *ngIf="assignMode && selectedTaskId == item.id"
@@ -115,14 +115,15 @@
                                     <span class="ms-2 text-sm">Unassigned</span>
                                 </a>
                                 }
-                                <li *ngFor="let user of users" class="dropdown-item text-white rounded-md">
+                                <li *ngFor="let user of allUsers" class="dropdown-item text-white rounded-md">
                                     <a class="d-flex btn text-decoration-none align-items-center"
                                         (click)="onAssignUser(item,user, type)">
                                         <div class="avatar-sm rounded-circle d-flex justify-content-center align-items-center bg-dark text-white"
                                             [ngStyle]="{'border-color': user.color}">
                                             <span class="text-8"> {{ user.initials | uppercase }}</span>
                                         </div>
-                                        <span class="ms-2 text-sm" [style.color]="user.color">{{user.username}}</span>
+                                        <span class="ms-2 text-sm"
+                                            [style.color]="user.color">{{user.username.split('@')[0]}}</span>
                                     </a>
                                 </li>
                             </ul>

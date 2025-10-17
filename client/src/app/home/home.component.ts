@@ -83,6 +83,10 @@ export class HomeComponent implements AfterViewChecked {
     return users$();
   }
 
+  get allUsers() {
+    return [...(users$()?.online ?? []), ...(users$()?.offline ?? [])];
+  }
+
   getLogInId() {
     return activeUserInfo$()?.id;
   }
@@ -161,7 +165,7 @@ export class HomeComponent implements AfterViewChecked {
 
         this.toggleCreate();
       } else {
-        this.toastr.error('Item already added');
+        this.toastr.error('Task already added');
       }
     }
   }
@@ -199,12 +203,21 @@ export class HomeComponent implements AfterViewChecked {
           'Error'
         );
       } else {
-        if (name.trim() != item.name.trim())
-          this.socketService.emit(SocketEmitEvent.EditItem, {
-            id,
-            name,
-            type,
-          });
+        if (name.trim() != item.name.trim()) {
+          if (
+            this.mergedList.find(
+              (i) => i.name.trim().toLowerCase() === name.trim().toLowerCase()
+            )
+          ) {
+            this.toastr.error(`Task already exist`, 'Update Fail');
+          } else {
+            this.socketService.emit(SocketEmitEvent.EditItem, {
+              id,
+              name,
+              type,
+            });
+          }
+        }
       }
     }
 
@@ -228,11 +241,8 @@ export class HomeComponent implements AfterViewChecked {
     }
 
     if (user) {
-      if (!this.users.find((x) => x.id == user.id)) {
-        this.toastr.error(
-          `User with username '${user}' has disconnected`,
-          'Task Assignment Error'
-        );
+      if (!this.allUsers.find((x) => x.id == user.id)) {
+        this.toastr.error(`User does not exist`, 'Assignment Error');
         this.assignMode = false;
         this.selectedTaskId = '';
         return;

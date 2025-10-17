@@ -14,11 +14,12 @@ const PORT = process.env.PORT || 5000;
 const app = express();
 const server = http.createServer(app);
 
-let activeUsers = [];
 let shoppingList = [];
 let buyingList = [];
 let doneList = [];
-let users = [];
+
+let activeUsers = [];
+let inactiveUsers = [];
 
 const io = new Server(server, {
   cors: { origin: "*" },
@@ -55,7 +56,7 @@ io.on(Observer.CONNECTION, (socket) => {
 
   socket.on(Observer.DELETE_ITEM, (data) => onDeleteItem(socket.data.id, data));
 
-  socket.on(Observer.DISCONNECT, () => onDisconnect(socket.data.id));
+  socket.on(Observer.DISCONNECT, (data) => onDisconnect(socket.data.id));
 });
 
 async function onInit() {
@@ -66,9 +67,6 @@ async function onInit() {
   const allUsers = await getCollection("users")
     .find({}, { projection: { _id: 0 } })
     .toArray();
-  if (!!users.length) {
-    users = allUsers;
-  }
 
   const items = await getCollection("items")
     .find({}, { projection: { _id: 0 } })
@@ -96,9 +94,12 @@ async function onUserJoined(socket, data) {
 
   let user;
 
-  const account = await usersCollection.findOne({
-    username: data.username,
-  });
+  const account = await usersCollection.findOne(
+    {
+      username: data.username,
+    },
+    { projection: { _id: 0 } }
+  );
 
   if (!account) {
     user = {
@@ -132,9 +133,26 @@ async function onUserJoined(socket, data) {
 
   const { _id, ...rest } = user;
 
+  const activeUserIds = activeUsers.map((user) => user.id);
+  if (!inactiveUsers.length) {
+    inactiveUsers = await usersCollection
+      .find(
+        {
+          id: { $nin: activeUserIds },
+        },
+        { projection: { _id: 0 } }
+      )
+      .toArray();
+  } else {
+    inactiveUsers = inactiveUsers.filter((x) => x.id != activeUser.id);
+  }
+
   onAddLog(user.id, `🙋 joined the session`);
   emit(socket, Emitter.USER_JOIN_SUCCESS, rest);
-  notify(Emitter.UPDATE_USER_LIST, activeUsers);
+  notify(Emitter.UPDATE_USER_LIST, {
+    online: activeUsers,
+    offline: inactiveUsers,
+  });
 }
 
 async function onAddShoppingItem(id, data) {
@@ -212,7 +230,7 @@ async function onHasItemEdited(userId, data) {
         item.name = name;
 
         notifyListByType(type);
-        onAddLog(userId, `updated task name '${prev}' to '${name}'`);
+        onAddLog(userId, ` updated task name '${prev}' to '${name}'`);
       }
     }
   }
@@ -238,7 +256,7 @@ async function onAssignItemToUser(userId, data) {
         let msg = "";
         if (assignedUser)
           msg = `assigned task '${item.name}' to user ${
-            getUserById(assignedUser?.id)?.username
+            getUserById(assignedUser?.id)?.username.split('@')[0]
           }`;
         else msg = `set task '${item.name}' as unassigned`;
 
@@ -274,8 +292,17 @@ function onDisconnect(id) {
     onAddLog(id, `left the session 👋`);
   }
 
-  activeUsers = activeUsers.filter((u) => u.id != id);
-  notify(Emitter.UPDATE_USER_LIST, activeUsers);
+  const index = activeUsers.findIndex((u) => u.id === id);
+  let user;
+  if (index !== -1) {
+    user = activeUsers.splice(index, 1)[0];
+    inactiveUsers.push(user);
+  }
+
+  notify(Emitter.UPDATE_USER_LIST, {
+    online: activeUsers,
+    offline: inactiveUsers,
+  });
 }
 
 function getListByType(type) {
@@ -297,11 +324,13 @@ async function notifyListByType(type) {
 }
 
 function getUsernameById(id) {
-  return activeUsers.find((u) => u.id == id)?.username ?? "";
+  const all = [...activeUsers, ...inactiveUsers];
+  return all.find((u) => u.id == id)?.username ?? "";
 }
 
 function getUserById(id) {
-  return activeUsers.find((u) => u.id == id);
+  const all = [...activeUsers, ...inactiveUsers];
+  return all.find((u) => u.id == id);
 }
 
 //sender only

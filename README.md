@@ -117,5 +117,6 @@ One url is using localhost:port, and the other one is the ipAddress:port (click 
 - Implement Authentication :heavy_check_mark:
 - Keep the sort order of the cards (on refresh) :hammer_and_wrench:
 - Improve UI :construction:
-- Track all users (offline and online) :hammer_and_wrench:
+- Track all users (offline and online) :heavy_check_mark:
+- Can assign task to any user (offline/online):heavy_check_mark:
 - Persist logs :hammer_and_wrench:

@@ -54,6 +54,7 @@ export function MSALInstanceFactory(): IPublicClientApplication {
     },
     cache: {
       cacheLocation: BrowserCacheLocation.LocalStorage,
+      storeAuthStateInCookie: false,
     },
     system: {
       // allowNativeBroker: false, // Disables WAM Broker

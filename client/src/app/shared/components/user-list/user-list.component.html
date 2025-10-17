@@ -1,16 +1,31 @@
-<aside *ngIf="users.length" class="userList" [class.collapsed]="isCollapsed">
-    <div class="d-flex align-items-center justify-content-between">
-        <h5 class="text-xs px-2 mb-0 ">Users — {{users.length}}</h5>
-        <button class="btn btn-toggle text-white" (click)="isCollapsed = !isCollapsed">
-            ☰
-        </button>
-    </div>
-    <ng-container *ngFor="let u of users; trackBy:trackById">
-        <div class="p-2 d-flex user align-items-center" [@slideIn]>
-            <div class="user-avatar border-1" [ngStyle]="{'border-color': u.color}">
-                <span class="text-white fw-bold">{{ u.initials | uppercase }}</span>
-            </div>
-            <span [style.color]="u.color" class="fw-bold username text-xs">{{ u.username.split('@')[0] }}</span>
+<aside *ngIf="users" class="userList" [class.collapsed]="isCollapsed">
+    <div>
+        <div class="d-flex align-items-center justify-content-between">
+            <h5 class="text-xs px-2 mb-0 ">Users — {{users.online.length}}</h5>
+            <button class="btn btn-toggle text-white" (click)="isCollapsed = !isCollapsed">
+                ☰
+            </button>
         </div>
-    </ng-container>
+        <ng-container *ngFor="let u of users.online; trackBy:trackById">
+            <div class="p-2 d-flex user align-items-center" [@slideIn]>
+                <div class="user-avatar border-1" [ngStyle]="{'border-color': u.color}">
+                    <span class="text-white fw-bold">{{ u.initials | uppercase }}</span>
+                </div>
+                <span [style.color]="u.color" class="fw-bold username text-xs">{{ u.username.split('@')[0] }}</span>
+            </div>
+        </ng-container>
+    </div>
+    <div class="opacity-50">
+        <div class="d-flex align-items-center justify-content-between mt-3">
+            <h5 class="text-xs px-2 mb-0">Offline — {{users.offline.length}}</h5>
+        </div>
+        <ng-container *ngFor="let u of users.offline; trackBy:trackById">
+            <div class="p-2 d-flex user align-items-center" [@slideIn]>
+                <div class="user-avatar border-1" [ngStyle]="{'border-color': u.color}">
+                    <span class="text-white fw-bold">{{ u.initials | uppercase }}</span>
+                </div>
+                <span [style.color]="u.color" class="fw-bold username text-xs">{{ u.username.split('@')[0] }}</span>
+            </div>
+        </ng-container>
+    </div>
 </aside>

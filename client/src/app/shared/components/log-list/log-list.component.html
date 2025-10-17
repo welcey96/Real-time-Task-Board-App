@@ -6,7 +6,7 @@
                 [{{log.timestamp | date:'shortTime'}}]
             </div>
             <div>
-                <span [style.color]="log.userColor" class="fw-bolder" *ngIf="log.username"> {{log.username}} &nbsp;</span>
+                <span [style.color]="log.userColor" class="fw-bolder" *ngIf="log.username"> {{log.username.split('@')[0]}} &nbsp;</span>
                 <span class="text-white">{{log.message}}</span>
             </div>
         </div>

@@ -120,3 +120,4 @@ One url is using localhost:port, and the other one is the ipAddress:port (click 
 - Track all users (offline and online) :heavy_check_mark:
 - Can assign task to any user (offline/online) :heavy_check_mark:
 - Persist logs :hammer_and_wrench:
+- Add more functionalities :hammer_and_wrench:

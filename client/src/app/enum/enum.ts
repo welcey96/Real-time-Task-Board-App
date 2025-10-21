@@ -1,5 +1,5 @@
 export enum SocketEvent {
-  UpdateLogs = 'updatelogs',
+  UpdateLogs = 'updateLogs',
   UpdateUserList = 'updateUserList',
   UpdateShoppingList = 'updateShoppingList',
   UpdateBuyingList = 'updateBuyingList',

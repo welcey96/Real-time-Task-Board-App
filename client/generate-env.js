@@ -20,7 +20,6 @@ if (fs.existsSync(envFile)) {
 
 const isDockerBuild = process.env.DOCKER === "true";
 let socketHost = "localhost";
-console.log(process.env.DOCKER)
 if (!isDockerBuild) {
   const os = require("os");
   const interfaces = os.networkInterfaces();

@@ -7,7 +7,7 @@ const { connectDB, getCollection } = require("./db/mongo");
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
-const { Observer, Emitter } = require("./Enum.js");
+const { Observer, Emitter } = require("./enum.js");
 const { getRandomColor, getInitials } = require("./utils.js");
 
 const PORT = process.env.PORT || 5000;
@@ -56,7 +56,7 @@ io.on(Observer.CONNECTION, (socket) => {
 
   socket.on(Observer.DELETE_ITEM, (data) => onDeleteItem(socket.data.id, data));
 
-  socket.on(Observer.DISCONNECT, (data) => onDisconnect(socket.data.id));
+  socket.on(Observer.DISCONNECT, () => onDisconnect(socket.data.id));
 });
 
 async function onInit() {

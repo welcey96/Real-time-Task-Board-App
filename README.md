@@ -5,7 +5,7 @@ Users can add, assign, edit, delete, and move items using drag-and-drop. Changes
 
 ## Tech Stack
 
-[![Node.js](https://img.shields.io/badge/Node.js-v20.17.0-blue?logo=nodedotjs&logoColor=white&style=flat&label=Node.js&message=LTS)](https://nodejs.org/en/download) [![Angular](https://img.shields.io/badge/Angular-v19-red?logo=angular&logoColor=white)](https://angular.dev/) [![Socket.IO](https://img.shields.io/badge/Socket.io-4.x-black?logo=socket.io&logoColor=white)](https://socket.io/) [![Bootstrap](https://img.shields.io/badge/Bootstrap-5.x-7952B3?logo=bootstrap&logoColor=white)](https://getbootstrap.com/) [![MongoDB](https://img.shields.io/badge/MongoDB-v7.0-green?logo=mongodb&logoColor=white)](https://www.mongodb.com/) [![MSAL](https://img.shields.io/badge/MSAL-Microsoft-blue?logo=microsoft&logoColor=white)](https://learn.microsoft.com/en-us/azure/active-directory/develop/msal-overview) [![Sass](https://img.shields.io/badge/Sass-v1.70.0-pink?logo=sass&logoColor=white)](https://sass-lang.com/)
+[![Node.js](https://img.shields.io/badge/Node.js-v20.17.0-blue?logo=nodedotjs&logoColor=white&style=flat&label=Node.js&message=LTS)](https://nodejs.org/en/download) [![Angular](https://img.shields.io/badge/Angular-v19-red?logo=angular&logoColor=white)](https://angular.dev/) [![Socket.IO](https://img.shields.io/badge/Socket.io-4.x-black?logo=socket.io&logoColor=white)](https://socket.io/) [![Bootstrap](https://img.shields.io/badge/Bootstrap-5.x-7952B3?logo=bootstrap&logoColor=white)](https://getbootstrap.com/) [![MongoDB](https://img.shields.io/badge/MongoDB-v7.0-green?logo=mongodb&logoColor=white)](https://www.mongodb.com/) [![MSAL](https://img.shields.io/badge/MSAL-Microsoft-blue?logo=microsoft&logoColor=white)](https://learn.microsoft.com/en-us/azure/active-directory/develop/msal-overview) [![Sass](https://img.shields.io/badge/Sass-v1.70.0-pink?logo=sass&logoColor=white)](https://sass-lang.com/) [![Docker](https://img.shields.io/badge/Docker-v27.2.3-blue?logo=docker&logoColor=white)](https://www.docker.com/)
 
 ### 🧩 Client
 
@@ -23,6 +23,12 @@ Users can add, assign, edit, delete, and move items using drag-and-drop. Changes
 - Express
 - Socket.IO
 - MongoDB
+
+### 🐳 Docker
+
+- Run the full stack (client, server, database) using Docker Compose
+- Build and start containers with one command
+- Ensures consistency across environments
 
 ## Features
 
@@ -53,7 +59,7 @@ Users can add, assign, edit, delete, and move items using drag-and-drop. Changes
 
 ## Requirements
 
-Before running the app, make sure you have the following installed and configured:
+Before running the app locally, make sure you have the following installed and configured:
 
 - **Node.js** (v20.x recommended)
 - **Angular CLI** (v19.x)
@@ -64,6 +70,7 @@ Before running the app, make sure you have the following installed and configure
   - Register an app in [Microsoft Entra ID](https://entra.microsoft.com/)
   - Obtain **Tenant ID**, **Client ID**, and **Redirect URI**
   - Add these values to `.env` as `authority`, `clientId`, and `REDIRECT_URI`
+- **Docker** (optional if using Docker Compose)
 
 ## Installation
 
@@ -107,8 +114,27 @@ Start client
   ...websockets\client > npm run start
 ```
 
-On the same client terminal after running npm run start, scroll through the bottom of the terminal and select the url where the app is served.
-One url is using localhost:port, and the other one is the ipAddress:port (click the second one to let others connect to your app)
+## 🐳 Running with Docker
+
+You can also run the entire stack using Docker Compose. The provided ```compose.dev.yaml``` will build and run images for the ```client```, ```server```, and ```MongoDB```.
+
+Run the following command in the project root:
+```bash
+docker compose -f compose.dev.yaml up --build
+```
+##### This will:
+
+- Build Docker images for client and server
+
+- Start containers for client, server, and MongoDB
+
+- Expose ports so you can access the app in your browser
+
+To stop and remove containers:
+```bash
+docker compose -f compose.dev.yaml down
+```
+
 
 ### :memo: ToDos / WIP
 

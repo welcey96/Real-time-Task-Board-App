@@ -1,9 +1,14 @@
-### References
-* [Docker's Node.js guide](https://docs.docker.com/language/nodejs/)
+# WebSocket Project Docker Guide
 
-```yaml
+This guide outlines building and running Docker images and containers for your WebSocket project (frontend Angular client and backend Node.js server).
 
-docker build -t ws-frontend-dev --target dev Dockerfile.dev .
+## 1️⃣ Build Docker Images
+
+Each project (frontend/backend) should have its **own Dockerfile**, optionally multi-stage for dev/prod.
+
+**Example (frontend dev build):**
+```bash
+docker build -t ws-frontend-dev --target dev -f Dockerfile.dev .
 ```
 
 ```-t ws-frontend-dev``` → gives the image a name/tag.
@@ -14,34 +19,62 @@ docker build -t ws-frontend-dev --target dev Dockerfile.dev .
 
 ```.```  → build context (current directory).
 
-
-```yaml
-
+## 2️⃣ Run Containers
+```bash 
 docker run -e DOCKER=true -p 4200:4200 --name ws-frontend ws-frontend-dev
 ```
 
-```docker run```
+```docker run``` →  starts a container from an image
 
-This tells Docker to start a container from an image.
+```-e DOCKER=true``` → sets an environment variable inside the container ```(process.env.DOCKER)```
 
-```-e DOCKER=true```
+```-p 4200:4200```→ maps host port 4200 to container port 4200
 
-Sets an environment variable inside the container.
+```--name ws-frontend```→ container name for easier management
 
-Here, your code can check process.env.DOCKER to know it's running in Docker.
+```ws-frontend-dev```→ the image to run
 
-```-p 4200:4200```
+### Using Docker Compose (recommended)
+- Compose will build images and run containers automatically.
+- You can define environment variables for dev/prod and link services.
 
-Maps host port 4200 (your computer) to container port 4200.
+## 3️⃣ Environment Variables
+- ```environment``` → directly sets variables like ```-e``` in ```docker run```
 
-This allows you to access the frontend in your browser via http://localhost:4200.
+- ```env_file```:``` → reference ```.env``` files; useful for secrets or multiple variables
 
-```--name ws-frontend```
+- Variables in ```environment``` override ```.env``` values
 
-Gives the container a friendly name instead of a random one.
+## 4️⃣ Multi-stage Dockerfiles
+- Dev stage: runs ```npm run dev``` or ```ng serve``` for live reload
 
-Makes it easier to start, stop, or remove the container later.
+- Prod stage: builds the app (```ng build```) and serves with Nginx for frontend, plain ```node src/index.js``` for backend
 
-```ws-frontend-dev```
+## 5️⃣ Notes
+- Frontend dev → port 4200, uses ```ng serve```
 
-This is the name/tag of the Docker image you’re using to create the container.
+- Frontend prod → built with ```ng build``` and served via Nginx
+
+- Backend dev/prod → port 3000, uses environment variables from ```.env``` or Compose
+
+- Detect Docker in code: ```process.env.DOCKER```
+
+- Networking:
+
+    - ```localhost``` inside a container → refers to the container itself
+
+    - To connect between containers → use service names ```(backend:3000)```
+
+
+### 6️⃣ References
+* [Docker's Node.js guide](https://docs.docker.com/language/nodejs/)
+* [Node.js Development with Docker](https://docs.docker.com/guides/nodejs/develop/)
+* [Angular Containerization](https://docs.docker.com/guides/angular/containerize/)
+
+This `.md` file now contains:  
+
+- Full commands for building and running images  
+- Docker Compose examples  
+- Multi-stage Dockerfiles for frontend and backend  
+- Explanations for environment variables and networking  
+- Notes and references  

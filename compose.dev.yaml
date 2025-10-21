@@ -24,7 +24,6 @@ services:
       NODE_ENV: development
       # Override only the DB connection string
       MONGO_URI: mongodb://sa:sa@mongo:27017/websocket?authSource=admin
-
     depends_on:
       - mongo
     volumes:

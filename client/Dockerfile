@@ -30,7 +30,7 @@ COPY . .
 FROM base AS dev
 ENV NODE_ENV=development
 EXPOSE 4200
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "dev"]
 
 
 # =========================================

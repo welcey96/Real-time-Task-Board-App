@@ -6,7 +6,18 @@ This guide outlines building and running Docker images and containers for your W
 
 Each project (frontend/backend) should have its **own Dockerfile**, optionally multi-stage for dev/prod.
 
-**Example (frontend dev build):**
+**Rebuild all images and containers (no need to individually delete)**
+```
+docker compose up --build -d
+```
+
+**Specific project (backend is the name of the config in yaml for the server app)**
+```
+docker compose up -d --build backend 
+docker compose up -d --build frontend
+```
+
+**Example (build frontend image):**
 ```bash
 docker build -t ws-frontend-dev --target dev -f Dockerfile.dev .
 ```
@@ -50,7 +61,18 @@ docker run -e DOCKER=true -p 4200:4200 --name ws-frontend ws-frontend-dev
 
 - Prod stage: builds the app (```ng build```) and serves with Nginx for frontend, plain ```node src/index.js``` for backend
 
-## 5️⃣ Notes
+### 5️⃣Hot Reload / Live Development
+- Backend (Node.js)
+```json
+"dev": "env-cmd -f config/.env.dev nodemon --legacy-watch -e js src/index.js"
+```
+
+- Frontend (Angular)
+```json
+"start": "ng serve --host 0.0.0.0 --poll=2000 --disable-host-check"
+```
+
+## 6️⃣ Notes
 - Frontend dev → port 4200, uses ```ng serve```
 
 - Frontend prod → built with ```ng build``` and served via Nginx
@@ -65,8 +87,7 @@ docker run -e DOCKER=true -p 4200:4200 --name ws-frontend ws-frontend-dev
 
     - To connect between containers → use service names ```(backend:3000)```
 
-
-### 6️⃣ References
+### References
 * [Docker's Node.js guide](https://docs.docker.com/language/nodejs/)
 * [Node.js Development with Docker](https://docs.docker.com/guides/nodejs/develop/)
 * [Angular Containerization](https://docs.docker.com/guides/angular/containerize/)

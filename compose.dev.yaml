@@ -46,7 +46,7 @@ services:
     volumes:
       - ./client:/usr/src/app
       - /usr/src/app/node_modules
-    command: npm run start
+    command: npm run dev
 
 volumes:
   mongo-data:

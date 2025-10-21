@@ -115,9 +115,8 @@ One url is using localhost:port, and the other one is the ipAddress:port (click 
 - Remove username field on login :heavy_check_mark:
 - Add logout feature :heavy_check_mark:
 - Implement Authentication :heavy_check_mark:
-- Keep the sort order of the cards (on refresh) :hammer_and_wrench:
-- Improve UI :construction:
 - Track all users (offline and online) :heavy_check_mark:
 - Can assign task to any user (offline/online) :heavy_check_mark:
+- Improve UI :construction:
 - Persist logs :hammer_and_wrench:
-- Add more functionalities :hammer_and_wrench:
+- Keep the sort order of the cards (on refresh) :hammer_and_wrench:

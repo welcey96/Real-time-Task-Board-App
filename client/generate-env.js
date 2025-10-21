@@ -1,34 +1,50 @@
 const fs = require("fs");
-const os = require("os");
 const path = require("path");
 
-const interfaces = os.networkInterfaces();
-let localIp = "127.0.0.1";
+const envFile = path.join(__dirname, "src/environments/environment.ts");
 
-for (const name of Object.keys(interfaces)) {
-  for (const iface of interfaces[name]) {
-    if (iface.family === "IPv4" && !iface.internal) {
-      localIp = iface.address;
-      break;
+// Read existing environment file
+let existingEnv = {};
+if (fs.existsSync(envFile)) {
+  const envContent = fs.readFileSync(envFile, "utf8");
+  try {
+    // Evaluate the object inside export
+    const match = envContent.match(/export const environment = (.*);/s);
+    if (match) {
+      existingEnv = eval(`(${match[1]})`);
+    }
+  } catch (err) {
+    console.error("Error parsing environment.ts:", err);
+  }
+}
+
+const isDockerBuild = process.env.DOCKER === "true";
+let socketHost = "localhost";
+console.log(process.env.DOCKER)
+if (!isDockerBuild) {
+  const os = require("os");
+  const interfaces = os.networkInterfaces();
+  for (const name of Object.keys(interfaces)) {
+    for (const iface of interfaces[name]) {
+      if (iface.family === "IPv4" && !iface.internal) {
+        socketHost = iface.address;
+        break;
+      }
     }
   }
 }
 
-const envPath = path.join(__dirname, "src/environments/environment.ts");
-const content = `export const environment = {
-  production: false,
-  socketUrl: 'ws://${localIp}:3000',
-  msalConfig: {
-    auth: {
-      clientId: 'fde396f7-6f15-4b7a-9e12-cdbd5439ac1b',
-      authority: 'https://login.microsoftonline.com/common',
-    },
-  },
-  apiConfig: {
-    scopes: ['user.read'],
-    uri: 'https://graph.microsoft.com/v1.0/me',
-  },
-};\n`;
+// Merge the dynamic values with existing ones
+const newEnv = {
+  ...existingEnv,
+  socketUrl: `ws://${socketHost}:3000`,
+};
 
-fs.writeFileSync(envPath, content);
-console.log(`Your IP is: ${localIp}`);
+// Write back to environment.ts
+const fileContent = `export const environment = ${JSON.stringify(
+  newEnv,
+  null,
+  2
+)};`;
+fs.writeFileSync(envFile, fileContent, "utf8");
+console.log(`Your ${isDockerBuild ? 'docker ':''}socket host is: ${socketHost}`);

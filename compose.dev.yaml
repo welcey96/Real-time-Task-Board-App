@@ -1,0 +1,53 @@
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: sa
+      MONGO_INITDB_ROOT_PASSWORD: sa
+      MONGO_INITDB_DATABASE: websocket
+    volumes:
+      - mongo-data:/data/db
+
+  backend:
+    build:
+      context: ./server
+      target: dev
+    container_name: ws-backend
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./server/config/.env.dev
+    environment:
+      NODE_ENV: development
+      # Override only the DB connection string
+      MONGO_URI: mongodb://sa:sa@mongo:27017/websocket?authSource=admin
+
+    depends_on:
+      - mongo
+    volumes:
+      - ./server:/usr/src/app
+      - /usr/src/app/node_modules
+    command: npm run dev
+
+  frontend:
+    build:
+      context: ./client
+      target: dev
+    container_name: ws-frontend
+    ports:
+      - "4200:4200"
+    environment:
+      NODE_ENV: development
+      DOCKER: "true"
+    depends_on:
+      - backend
+    volumes:
+      - ./client:/usr/src/app
+      - /usr/src/app/node_modules
+    command: npm run start
+
+volumes:
+  mongo-data:
